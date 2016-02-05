@@ -1,4 +1,4 @@
-# Wormy (a Nibbles clone)
+ # Wormy (a Nibbles clone)
 # By Al Sweigart al@inventwithpython.com
 # http://inventwithpython.com/pygame
 # Released under a "Simplified BSD" license
@@ -8,9 +8,9 @@
 import random, pygame, sys
 from pygame.locals import *
 
-FPS = 10
-WINDOWWIDTH = 980
-WINDOWHEIGHT = 820
+FPS = 15
+WINDOWWIDTH = 1200
+WINDOWHEIGHT = 800
 CELLSIZE = 20
 assert WINDOWWIDTH % CELLSIZE == 0, "Window width must be a multiple of cell size."
 assert WINDOWHEIGHT % CELLSIZE == 0, "Window height must be a multiple of cell size."
@@ -21,17 +21,16 @@ CELLHEIGHT = int(WINDOWHEIGHT / CELLSIZE)
 WHITE     = (255, 255, 255)
 BLACK     = (  0,   0,   0)
 RED       = (255,   0,   0)
-GREEN     = (  0, 255,   0)
+GREEN     = (  211, 221,   0)
 DARKGREEN = (  0, 155,   0)
 DARKGRAY  = ( 40,  40,  40)
-YELLOW    = (255,255,0)  
 BGCOLOR = BLACK
 
 UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
-SHIFT = 'shift'
+
 HEAD = 0 # syntactic sugar: index of the worm's head
 
 def main():
@@ -41,7 +40,7 @@ def main():
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
-    pygame.display.set_caption('wormy')
+    pygame.display.set_caption('Wormy')
 
     showStartScreen()
     while True:
@@ -118,16 +117,6 @@ def drawPressKeyMsg():
 
 
 # KRT 14/06/2012 rewrite event detection to deal with mouse use
-
-
-
-def drawScore(score):
-    scoreSurf = BASICFONT.render('NEGELS BORAD Score: %s' % (score), True, WHITE)
-    scoreRect = scoreSurf.get_rect()
-    scoreRect.topleft = (WINDOWWIDTH - 400, 200)
-    DISPLAYSURF.blit(scoreSurf, scoreRect)
-    
-        
 def checkForKeyPress():
     for event in pygame.event.get():
         if event.type == QUIT:      #event is quit 
@@ -143,11 +132,11 @@ def checkForKeyPress():
     
 def showStartScreen():
     titleFont = pygame.font.Font('freesansbold.ttf', 100)
-    titleSurf1 = titleFont.render('NIGEL!', True, YELLOW, BLACK)
-    titleSurf2 = titleFont.render('NIGLKEL!', True, GREEN)
+    titleSurf1 = titleFont.render('inyoka!', True, WHITE, DARKGREEN)
+    titleSurf2 = titleFont.render('noga!', True, GREEN)
 
-    degrees1 = 400
-    degrees2 = 400
+    degrees1 = 0
+    degrees2 = 0
     
 #KRT 14/06/2012 rewrite event detection to deal with mouse use
     pygame.event.get()  #clear out event queue
@@ -170,7 +159,7 @@ def showStartScreen():
             return
         pygame.display.update()
         FPSCLOCK.tick(FPS)
-        degrees1 += 7 # rotate by 3 degrees each frame
+        degrees1 += 3 # rotate by 3 degrees each frame
         degrees2 += 7 # rotate by 7 degrees each frame
 
 
@@ -185,8 +174,8 @@ def getRandomLocation():
 
 def showGameOverScreen():
     gameOverFont = pygame.font.Font('freesansbold.ttf', 150)
-    gameSurf = gameOverFont.render('GAME', True, WHITE)
-    overSurf = gameOverFont.render('OVER', True, WHITE)
+    gameSurf = gameOverFont.render('Game', True, WHITE)
+    overSurf = gameOverFont.render('Over', True, WHITE)
     gameRect = gameSurf.get_rect()
     overRect = overSurf.get_rect()
     gameRect.midtop = (WINDOWWIDTH / 2, 10)
@@ -205,26 +194,28 @@ def showGameOverScreen():
 #KRT 12/06/2012 reduce processor loading in gameover screen.
         pygame.time.wait(100)
 
-    
+def drawScore(score):
+    scoreSurf = BASICFONT.render('Score: %s' % (score), True, WHITE)
+    scoreRect = scoreSurf.get_rect()
+    scoreRect.topleft = (WINDOWWIDTH - 120, 10)
+    DISPLAYSURF.blit(scoreSurf, scoreRect)
+
 
 def drawWorm(wormCoords):
-    
     for coord in wormCoords:
         x = coord['x'] * CELLSIZE
         y = coord['y'] * CELLSIZE
         wormSegmentRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
         pygame.draw.rect(DISPLAYSURF, DARKGREEN, wormSegmentRect)
         wormInnerSegmentRect = pygame.Rect(x + 4, y + 4, CELLSIZE - 8, CELLSIZE - 8)
-        pygame.draw.rect(DISPLAYSURF, YELLOW
-                         , wormInnerSegmentRect)
+        pygame.draw.rect(DISPLAYSURF, GREEN, wormInnerSegmentRect)
 
 
 def drawApple(coord):
     x = coord['x'] * CELLSIZE
     y = coord['y'] * CELLSIZE
     appleRect = pygame.Rect(x, y, CELLSIZE, CELLSIZE)
-    pygame.draw.rect(DISPLAYSURF, YELLOW, appleRect)
-    
+    pygame.draw.rect(DISPLAYSURF, RED, appleRect)
 
 
 def drawGrid():
